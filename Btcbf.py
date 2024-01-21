@@ -19,7 +19,7 @@ class Btcbf():
         self.seq = False
         self.privateKey = None
         self.start_r = 0
-        loaded_addresses = open("address.txt", "r").readlines()
+        loaded_addresses = open("Bitcoin_addresses_LATEST.txt", "r").readlines()
         loaded_addresses = [x.rstrip() for x in loaded_addresses]
         # Remove invalid wallet addresses
         loaded_addresses = [x for x in loaded_addresses if x.find('wallet') == -1 and len(x) > 0]

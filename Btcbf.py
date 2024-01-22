@@ -6,8 +6,8 @@ import threading
 from concurrent.futures import ThreadPoolExecutor
 from multiprocessing import cpu_count
 import gzip
-import tqdm
 import random
+import sys
 
 if os.path.exists(os.getcwd()+"/cache.txt") == False:
     open("cache.txt", "w+")
@@ -20,19 +20,13 @@ def download_latest_balance_txt():
         response = requests.get(download_latest_balances_url, stream=True)
         total = int(response.headers.get('content-length', 0))
         with open(balance_file_name, mode="wb") as file:
-             
-            tqdm_params = {
-                'desc': download_latest_balances_url,
-                'total': total,
-                'miniters': 1,
-                'unit': 'B',
-                'unit_scale': True,
-                'unit_divisor': 1024,
-            }
-            with tqdm.tqdm(**tqdm_params) as pb:
-                for chunk in response.iter_content(chunk_size=10 * 1024):
-                    pb.update(len(chunk))
-                    file.write(chunk)
+            loaded = 0
+            for chunk in response.iter_content(chunk_size=10 * 1024):
+                loaded += len(chunk)
+                progress = 100 / total * loaded
+                sys.stdout.write("Download progress: %d%%   \r" % (progress) )
+                sys.stdout.flush()
+                file.write(chunk)
         print("Download completed")
 
 class Btcbf():

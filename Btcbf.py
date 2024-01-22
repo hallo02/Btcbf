@@ -7,6 +7,7 @@ from concurrent.futures import ThreadPoolExecutor
 from multiprocessing import cpu_count
 import gzip
 import tqdm
+import random
 
 if os.path.exists(os.getcwd()+"/cache.txt") == False:
     open("cache.txt", "w+")
@@ -51,9 +52,18 @@ class Btcbf():
         loaded_addresses = [x.rstrip() for x in loaded_addresses]
         # Remove invalid wallet addresses
         loaded_addresses = [x for x in loaded_addresses if x.find('wallet') == -1 and len(x) > 0]
+        random_selection = random.sample(loaded_addresses,2)
         self.loaded_addresses = set(loaded_addresses)
         print("Successfully loaded", len(self.loaded_addresses), "addresses into memory")
+        self.checkRandomAddresses(random_selection)
         
+    def checkRandomAddresses(self, selection):
+        print("Init some balance checks of loaded addresses")
+        for address in selection:
+            url = "https://blockchain.info/q/addressbalance/" + address
+            balance = int(requests.get(url).text) / 100000000
+            print(address, "has", balance, "bitcoins")
+
     def speed(self):
         while True:
             if self.cur_n != 0:
@@ -80,22 +90,7 @@ class Btcbf():
                 f.write(key.to_wif()+"\n")
                 f.close()
                 sleep(510)
-                exit()
-            
-    def sequential_brute(self, n):
-        self.cur_n=n
-        key = Key().from_int(n)
-        if key.address in self.loaded_addresses:
-            print("Wow matching address found!!")
-            print("Public Adress: "+key.address)
-            print("Private Key: "+key.to_wif())
-            f = open("foundkey.txt", "a") # the found privatekey and address saved to "foundkey.txt"
-            f.write(key.address+"\n")
-            f.write(key.to_wif()+"\n")
-            f.close()
-            sleep(500)
-            exit()
-                
+                exit()                
 
     def num_of_cores(self):
         available_cores = cpu_count()

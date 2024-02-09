@@ -165,8 +165,8 @@ class Btcbf():
             self.start_n = 0
             i=0
             while i < 100000000000000000:
-                if pool._work_queue.qsize() > 1000:
-                    sleep(2)
+                if pool._work_queue.qsize() > 10000:
+                    sleep(1)
                 else:
                     pool.submit(target, i)
                     i = i+1

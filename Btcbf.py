@@ -9,6 +9,7 @@ import gzip
 import random
 import sys
 
+
 if os.path.exists(os.getcwd()+"/cache.txt") == False:
     open("cache.txt", "w+")
 
@@ -71,7 +72,7 @@ class Btcbf():
                 if self.seq:
                     open("cache.txt","w").write(f"{self.cur_n}-{self.start_r}-{self.end_n}")
             sleep(2)
-        
+
     def random_brute(self, n):
         self.cur_n=n
         key = Key()
@@ -159,12 +160,16 @@ class Btcbf():
             input("Press Enter to exit")
             exit()
         with ThreadPoolExecutor(max_workers=self.num_of_cores()) as pool:
-            r = range(100000000000000000)
             print("\n Starting ...")
             self.start_t = time()
             self.start_n = 0
-            for i in r:
-                pool.submit(target, i)
+            i=0
+            while i < 100000000000000000:
+                if pool._work_queue.qsize() > 1000:
+                    sleep(2)
+                else:
+                    pool.submit(target, i)
+                    i = i+1
             print("Stopping\n")
             exit()
 

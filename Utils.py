@@ -37,6 +37,6 @@ def random_brute(loaded_addresses, i, start_time):
             sleep(510)
             exit()
     if i != 0 and i % 10_000_000 == 0:
-        print(f"i: {i} | {(time()-start_time)/3600:.2f}h")
+        print(f"i: {i} | {(time()-start_time)/3600:.4f}h")
         print(f"Current address {key.address} and current key {key.to_wif()}")
           

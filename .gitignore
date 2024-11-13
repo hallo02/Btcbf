@@ -1,3 +1,4 @@
 .DS_Store
 cache.txt
 le_addresses.gz
+*.pyc

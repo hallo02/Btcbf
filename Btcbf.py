@@ -37,7 +37,7 @@ def get_user_input(argv):
             if hasToDownload(argv):
                 BalanceDownload.download_latest_balance_txt(download_latest_balances_url, balance_file_name)
             loaded_addresses = BalanceDownload.prepare_loaded_addresses(balance_file_name)
-            target = Utils.random_brute
+            fn_random_brute = Utils.random_brute
         else:
             print("exitting...")
             exit()
@@ -50,7 +50,7 @@ def get_user_input(argv):
         print("\n Starting ...", start_time)
         i=0
         while True:
-            if i != 0 and i % 10_000_000 == 0:
+            if i != 0 and i % 50_000_000 == 0:
                 print(f"i: {i} | {(time()-start_time)/3600:.4f}h")
                 BalanceDownload.download_latest_balance_txt(download_latest_balances_url, balance_file_name)
                 loaded_addresses = BalanceDownload.prepare_loaded_addresses(balance_file_name)
@@ -58,7 +58,7 @@ def get_user_input(argv):
             if pool._work_queue.qsize() > 10000:
                 sleep(1)
             else:
-                pool.submit(target, loaded_addresses, i, start_time)
+                pool.submit(fn_random_brute, loaded_addresses, i, start_time)
                 i = i+1
         print("Stopping\n")
         exit()
